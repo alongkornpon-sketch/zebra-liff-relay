@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zebra HR Hub</title>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: #1B2F5E;
+      font-family: sans-serif;
+      color: #fff;
+    }
+    .logo { font-size: 48px; margin-bottom: 12px; }
+    .title { font-size: 20px; font-weight: bold; margin-bottom: 8px; }
+    .sub { font-size: 14px; opacity: 0.7; margin-bottom: 32px; }
+    .spinner {
+      width: 36px; height: 36px;
+      border: 4px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    .msg { margin-top: 16px; font-size: 13px; opacity: 0.8; }
+    .err { color: #ff8a8a; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="logo">🦓</div>
+  <div class="title">Zebra HR Hub</div>
+  <div class="sub">บริษัท เสถียรสเตนเลสสตีล จำกัด (มหาชน)</div>
+  <div class="spinner" id="spinner"></div>
+  <div class="msg" id="msg">กำลังเข้าสู่ระบบ...</div>
+
+  <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <script>
+    const LIFF_ID  = '2010519606-94iBtRRW';
+    const GAS_URL  = 'https://script.google.com/macros/s/AKfycbwqpkJO1OawebLKp93k90vCD6JyIR8Cx_nWbjLtA6pDPcYNr1FdKOsVB-7N1I-0XJ-_/exec';
+
+    function showError(text) {
+      document.getElementById('spinner').style.display = 'none';
+      document.getElementById('msg').textContent = text;
+      document.getElementById('msg').classList.add('err');
+    }
+
+    liff.init({ liffId: LIFF_ID })
+      .then(() => {
+        if (!liff.isLoggedIn()) {
+          liff.login({ redirectUri: location.href });
+          return;
+        }
+        document.getElementById('msg').textContent = 'กำลังโหลดข้อมูล...';
+        return liff.getProfile();
+      })
+      .then(profile => {
+        if (!profile) return;
+        const url = GAS_URL + '?userId=' + encodeURIComponent(profile.userId);
+        window.location.replace(url);
+      })
+      .catch(err => {
+        showError('เกิดข้อผิดพลาด: ' + err.message);
+      });
+  </script>
+</body>
+</html>
