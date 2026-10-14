@@ -22,7 +22,7 @@
 
     // true  = ฝัง CheckInForm ใน iframe (ไม่แสดงแถบ Google Apps Script)
     // false = redirect ไป GAS ตรงๆ แบบเดิม — ใช้ย้อนกลับทันทีถ้า GPS ใน iframe มีปัญหา
-    const USE_IFRAME = true;
+    const USE_IFRAME = false;
     const IFRAME_TIMEOUT_MS = 15000;
 
     const userId = new URLSearchParams(location.search).get('userId') || '';
